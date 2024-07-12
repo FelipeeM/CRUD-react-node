@@ -1,0 +1,11 @@
+{
+  "name": "crud-react-node",
+  "version": "1.0.0",
+  "description": "- **Objetivo:** Criar uma API RESTful usando Node.js e Express para realizar operações CRUD (Create, Read, Update, Delete) na entidade \"Produtos\".\r - **Detalhes:**\r   - Campos do Produto: `id`, `nome`, `descrição`, `preço`, `data de criação`.\r   - Utilização do MySQL para armazenamento de dados.\r   - Implementação de validação de dados na criação e atualização de produtos.\r   - Tratamento adequado de erros.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "FelipeeM",
+  "license": "ISC"
+}
