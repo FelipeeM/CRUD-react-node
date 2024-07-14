@@ -48,13 +48,23 @@ class ProductService {
   ) {
     let response;
     try {
-      const product = await ProductDAO.updateProduct(productData);
-      if (product) response = successMessage("Sucesso na atualização do produto.", product);
-      else
-        response = failMessage("Produto não foi atualizado!",
+
+      const existProduct = await ProductDAO.getProductByName(productData.name)
+      if (existProduct)
+        response = failMessage("Já existe um produto com esse nome!",
           "Produto não foi atualizado!",
-          "identifier"
+          "name"
         );
+      else {
+        const product = await ProductDAO.updateProduct(productData);
+        if (product) response = successMessage("Sucesso na atualização do produto.", product);
+        else
+          response = failMessage("Produto não foi atualizado!",
+            "Produto não foi atualizado!",
+            "identifier"
+          );
+      }
+
     } catch (e) {
       console.error("ERROR - productUpdate", e);
       response = errorMessage("Erro interno ao tentar atualizar produto.", e);
