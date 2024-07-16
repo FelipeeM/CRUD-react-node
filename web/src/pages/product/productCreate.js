@@ -37,7 +37,7 @@ const ProductCreate = ({ onClose, onSave, product }) => {
     if (product) {
       setValue('name', product.name);
       setValue('description', product.description);
-      setValue('price', product.price);
+      setValue('price', Number(product.price));
     } else {
       reset();
     }
