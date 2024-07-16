@@ -1,8 +1,22 @@
 const { Router } = require("express");
 const ProductController = require("../controllers/Product.controller");
+const { bodyRequiredField, bodyRequiredFieldNumber, paramRequiredField, expressValidatorMiddleware } = require('../utils/restFullApiHelpers')
 
 const productRouter = Router();
 const routeName = "/product"
+
+const productCreateValidations = [
+    bodyRequiredField("name"),
+    bodyRequiredFieldNumber("price")
+];
+const productUpdateValidations = [
+    bodyRequiredField("id"),
+    bodyRequiredField("name"),
+    bodyRequiredFieldNumber("price")
+];
+const productDeleteValidations = [
+    paramRequiredField("id")
+];
 
 /**
  * @swagger
@@ -53,6 +67,8 @@ const routeName = "/product"
  */
 productRouter.post(
     routeName,
+    productCreateValidations,
+    expressValidatorMiddleware,
     ProductController.createProduct
 );
 /**
@@ -77,6 +93,8 @@ productRouter.post(
  */
 productRouter.put(
     routeName,
+    productUpdateValidations,
+    expressValidatorMiddleware,
     ProductController.productUpdate
 );
 /**
@@ -98,6 +116,8 @@ productRouter.put(
  */
 productRouter.delete(
     routeName + "/:id",
+    productDeleteValidations,
+    expressValidatorMiddleware,
     ProductController.productDelete
 );
 /**

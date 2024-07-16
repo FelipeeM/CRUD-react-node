@@ -29,13 +29,16 @@ class ProductService {
   ) {
     let response;
     try {
-      const product = await ProductDAO.deleteProductById(idProduct);
-      if (product) response = successMessage("Sucesso ao excluir produto.", idProduct);
-      else
+      const existProduct = await ProductDAO.getProductById(idProduct);
+      if (existProduct) {
+        await ProductDAO.deleteProductById(idProduct);
+        response = successMessage("Sucesso ao excluir produto.", idProduct);
+      } else
         response = failMessage("Produto não foi deletado!",
           "Produto não foi deletado!",
           "id"
         );
+
     } catch (e) {
       console.error("ERROR - productDelete", e);
       response = errorMessage("Erro interno ao tentar deletar produto.", e);
