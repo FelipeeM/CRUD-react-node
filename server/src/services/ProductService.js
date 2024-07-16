@@ -50,7 +50,7 @@ class ProductService {
     try {
 
       const existProduct = await ProductDAO.getProductByName(productData.name)
-      if (existProduct)
+      if (existProduct && existProduct.id !== productData.id)
         response = failMessage("Já existe um produto com esse nome!",
           "Produto não foi atualizado!",
           "name"
