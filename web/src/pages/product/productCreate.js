@@ -9,7 +9,6 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  InputAdornment,
   CircularProgress,
 } from '@mui/material';
 import axios from 'axios';
@@ -17,11 +16,12 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import PriceInput from '../../components/form/PriceInput';
 
 const productSchema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),
   description: z.string(),
-  price: z.preprocess((val) => parseFloat(val), z.number().min(0.01, 'Preço é obrigatório')),
+  price: z.number().min(0.01, 'Preço é obrigatório'),
 });
 
 const ProductCreate = ({ onClose, onSave, product }) => {
@@ -97,18 +97,12 @@ const ProductCreate = ({ onClose, onSave, product }) => {
                 <Controller
                   name="price"
                   control={control}
-                  defaultValue=""
+                  defaultValue={0}
                   render={({ field }) => (
-                    <TextField
-                      {...field}
-                      margin="dense"
-                      label="Preço"
-                      type="number"
-                      fullWidth
-                      InputProps={{
-                        startAdornment: <InputAdornment position="start">R$</InputAdornment>,
-                      }}
-                      error={!!errors.price}
+                    <PriceInput
+                      value={field.value}
+                      onChange={field.onChange}
+                      error={errors.price}
                       helperText={errors.price?.message}
                     />
                   )}
@@ -138,7 +132,7 @@ const ProductCreate = ({ onClose, onSave, product }) => {
               <Button onClick={onClose} color="primary">
                 Cancelar
               </Button>
-              <Button type="submit" color="primary" disabled={errors.length}>
+              <Button type="submit" color="primary">
                 Salvar
               </Button>
             </DialogActions>
