@@ -43,12 +43,10 @@ const ProductList = () => {
     try {
       const response = await ProductService.findAll()
       setProducts(response.data);
-      setLoading(false);
     } catch (error) {
       console.error("Error fetching the products!", error);
       setSnackbar({ open: true, message: 'Erro ao buscar produtos!', severity: 'error' });
-      setLoading(false);
-    }
+    } finally { setLoading(false) }
   };
 
   const handleEdit = (product) => {

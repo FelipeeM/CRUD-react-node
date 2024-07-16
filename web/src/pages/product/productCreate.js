@@ -61,9 +61,7 @@ const ProductCreate = ({ onClose, onSave, product }) => {
       console.error("error saving the product!", error);
       if (error.response) setSnackbar({ open: true, message: error.response.data.message, severity: 'error' });
       else setSnackbar({ open: true, message: 'Erro ao salvar Produto!', severity: 'error' });
-    } finally {
-      setLoading(false);
-    }
+    } finally { setLoading(false) }
   };
 
   const handleCloseSnackbar = () => setSnackbar({ ...snackbar, open: false });
