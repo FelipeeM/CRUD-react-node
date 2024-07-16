@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Alert,
   Dialog,
@@ -14,52 +14,54 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import Grid from '@mui/material/Unstable_Grid2';
+import { useForm, Controller } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-const ProductCreate = ({
-  onClose,
-  onSave,
-  product
-}) => {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
+const productSchema = z.object({
+  name: z.string().min(1, 'Nome é obrigatório'),
+  description: z.string(),
+  price: z.preprocess((val) => parseFloat(val), z.number().min(0.01, 'Preço é obrigatório')),
+});
+
+const ProductCreate = ({ onClose, onSave, product }) => {
+  const { control, handleSubmit, reset, setValue, formState: { errors } } = useForm({
+    resolver: zodResolver(productSchema),
+  });
+
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
   useEffect(() => {
     if (product) {
-      setName(product.name);
-      setDescription(product.description);
-      setPrice(product.price);
+      setValue('name', product.name);
+      setValue('description', product.description);
+      setValue('price', product.price);
+    } else {
+      reset();
     }
-  }, [product]);
+  }, [product, setValue, reset]);
 
-  const handleSave = async () => {
+  const onSubmit = async (data) => {
     setLoading(true);
     try {
       if (product) {
         await axios.put(`http://localhost:3000/api/v1/product`, {
           id: product.id,
-          name,
-          description,
-          price: parseFloat(price),
+          ...data,
         });
         setSnackbar({ open: true, message: 'Produto Atualizado!', severity: 'success' });
       } else {
-        await axios.post('http://localhost:3000/api/v1/product', {
-          name,
-          description,
-          price: parseFloat(price),
-        })
+        await axios.post('http://localhost:3000/api/v1/product', data);
         setSnackbar({ open: true, message: 'Produto Criado!', severity: 'success' });
       }
       onSave();
       onClose();
-      setLoading(false);
     } catch (error) {
       console.error("error saving the product!", error);
       if (error.response) setSnackbar({ open: true, message: error.response.data.message, severity: 'error' });
       else setSnackbar({ open: true, message: 'Erro ao salvar Produto!', severity: 'error' });
+    } finally {
       setLoading(false);
     }
   };
@@ -71,51 +73,77 @@ const ProductCreate = ({
       <Dialog open onClose={onClose}>
         <DialogTitle>{product ? 'Editar Produto' : 'Adicionar Produto'}</DialogTitle>
         <DialogContent>
-          <Grid container spacing={2}>
-            <Grid xs={8}>
-              <TextField
-                autoFocus
-                margin="dense"
-                label="Nome"
-                fullWidth
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Grid container spacing={2}>
+              <Grid xs={8}>
+                <Controller
+                  name="name"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      autoFocus
+                      margin="dense"
+                      label="Nome"
+                      fullWidth
+                      error={!!errors.name}
+                      helperText={errors.name?.message}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid xs={4}>
+                <Controller
+                  name="price"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      margin="dense"
+                      label="Preço"
+                      type="number"
+                      fullWidth
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">R$</InputAdornment>,
+                      }}
+                      error={!!errors.price}
+                      helperText={errors.price?.message}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid xs={12}>
+                <Controller
+                  name="description"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      margin="dense"
+                      label="Descrição"
+                      multiline
+                      rows={4}
+                      fullWidth
+                      error={!!errors.description}
+                      helperText={errors.description?.message}
+                    />
+                  )}
+                />
+              </Grid>
             </Grid>
-            <Grid xs={4}>
-              <TextField
-                margin="dense"
-                label="Preço"
-                type="number"
-                fullWidth
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                InputProps={{
-                  startAdornment: <InputAdornment position="start">R$</InputAdornment>,
-                }}
-              />
-            </Grid>
-            <Grid xs={12}>
-              <TextField
-                margin="dense"
-                label="Descrição"
-                multiline
-                rows={4}
-                fullWidth
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-            </Grid>
-          </Grid>
+            <DialogActions>
+              <Button onClick={onClose} color="primary">
+                Cancelar
+              </Button>
+              <Button type="submit" color="primary" disabled={errors.length}>
+                Salvar
+              </Button>
+            </DialogActions>
+          </form>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={onClose} color="primary">
-            Cancelar
-          </Button>
-          <Button onClick={handleSave} color="primary">
-            Salvar
-          </Button>
-        </DialogActions>
       </Dialog>
       <Backdrop style={{ zIndex: 1200 }} open={loading}>
         <CircularProgress color="inherit" />
