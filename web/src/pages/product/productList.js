@@ -89,6 +89,7 @@ const ProductList = () => {
 
   return (
     <Container>
+      {openForm && <ProductCreate onClose={handleFormClose} product={selectedProduct} onSave={getProducts} />}
       <Typography variant="h4" component="h1" gutterBottom>
         Lista de Produtos
       </Typography>
@@ -115,43 +116,44 @@ const ProductList = () => {
           </Button>
 
         </Grid>
+        <Grid xs={12} >
+          <TableContainer sx={{ maxHeight: 'calc(100vh - 155px)' }} component={Paper}>
+            <Table stickyHeader>
+              <TableHead>
+                <TableRow >
+                  <TableCell>Nome</TableCell>
+                  <TableCell>Preço (R$)</TableCell>
+                  <TableCell>Descrição</TableCell>
+                  <TableCell>Ações</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredProducts.map((product) => (
+                  <TableRow key={product.id} >
+                    <TableCell>{product.name}</TableCell>
+                    <TableCell>{(Number(product.price).toFixed(2))}</TableCell>
+                    <TableCell style={{
+                      maxWidth: '150px',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
+                    }}>{product.description}</TableCell>
+                    <TableCell>
+                      <IconButton color="primary" onClick={() => handleEdit(product)}>
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton color="secondary" onClick={() => handleDelete(product.id)}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Grid>
       </Grid>
 
-      {openForm && <ProductCreate onClose={handleFormClose} product={selectedProduct} onSave={getProducts} />}
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Nome</TableCell>
-              <TableCell>Preço</TableCell>
-              <TableCell>Descrição</TableCell>
-              <TableCell>Ações</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredProducts.map((product) => (
-              <TableRow key={product.id}>
-                <TableCell>{product.name}</TableCell>
-                <TableCell>{product.price}</TableCell>
-                <TableCell style={{
-                  maxWidth: '150px',
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis'
-                }}>{product.description}</TableCell>
-                <TableCell>
-                  <IconButton color="primary" onClick={() => handleEdit(product)}>
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton color="secondary" onClick={() => handleDelete(product.id)}>
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
       <Backdrop style={{ zIndex: 1200 }} open={loading}>
         <CircularProgress color="inherit" />
       </Backdrop>
