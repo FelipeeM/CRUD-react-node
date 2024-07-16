@@ -11,6 +11,7 @@ import {
   DialogActions,
   CircularProgress,
 } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
@@ -127,12 +128,12 @@ const ProductCreate = ({ onClose, onSave, product }) => {
               </Grid>
             </Grid>
             <DialogActions>
-              <Button onClick={onClose} color="primary">
+              <Button onClick={onClose} color="primary" disabled={loading}>
                 Cancelar
               </Button>
-              <Button type="submit" color="primary">
+              <LoadingButton  type="submit" color="primary" loading={loading}>
                 Salvar
-              </Button>
+              </LoadingButton >
             </DialogActions>
           </form>
         </DialogContent>
