@@ -20,6 +20,8 @@ jobs:
         run: |
           npm ci
           npm run build
+        env:
+          URL_API: ${{ vars.URL_API }}
         working-directory: ./web
 
       - name: Deploy to Firebase
