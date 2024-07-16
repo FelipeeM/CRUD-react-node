@@ -16,7 +16,8 @@ import {
   TableContainer,
   CircularProgress,
   TextField,
-  InputAdornment
+  InputAdornment,
+  TableSortLabel
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import SearchIcon from '@mui/icons-material/Search';
@@ -25,6 +26,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ProductCreate from './productCreate';
 
 import ProductService from '../../services/product';
+import e from 'cors';
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -33,6 +35,8 @@ const ProductList = () => {
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   const [searchTerm, setSearchTerm] = useState('');
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState(null);
 
   useEffect(() => {
     getProducts();
@@ -41,12 +45,14 @@ const ProductList = () => {
   const getProducts = async () => {
     setLoading(true);
     try {
-      const response = await ProductService.findAll()
+      const response = await ProductService.findAll();
       setProducts(response.data);
     } catch (error) {
       console.error("Error fetching the products!", error);
       setSnackbar({ open: true, message: 'Erro ao buscar produtos!', severity: 'error' });
-    } finally { setLoading(false) }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleEdit = (product) => {
@@ -57,7 +63,7 @@ const ProductList = () => {
   const handleDelete = async (id) => {
     setLoading(true);
     try {
-      await ProductService.delete(id)
+      await ProductService.delete(id);
       getProducts();
       setSnackbar({ open: true, message: 'Produto deletado com sucesso!', severity: 'success' });
     } catch (error) {
@@ -81,7 +87,24 @@ const ProductList = () => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredProducts = products.filter(product =>
+  const handleRequestSort = (property) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
+
+  const sortedProducts = products.slice().sort((a, b) => {
+    if (orderBy === 'price') {
+      return order === 'asc' ? a[orderBy] - b[orderBy] : b[orderBy] - a[orderBy];
+    } else {
+      return orderBy ?
+        (order === 'asc'
+          ? a[orderBy].localeCompare(b[orderBy])
+          : b[orderBy].localeCompare(a[orderBy])) : products
+    }
+  });
+
+  const filteredProducts = sortedProducts.filter(product =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
     product.price.toString().toLowerCase().includes(searchTerm.toLowerCase())
@@ -114,24 +137,47 @@ const ProductList = () => {
           <Button variant="contained" color="primary" onClick={() => setOpenForm(true)}>
             Adicionar Produtos
           </Button>
-
         </Grid>
-        <Grid xs={12} >
+        <Grid xs={12}>
           <TableContainer sx={{ maxHeight: 'calc(100vh - 155px)' }} component={Paper}>
             <Table stickyHeader>
               <TableHead>
-                <TableRow >
-                  <TableCell>Nome</TableCell>
-                  <TableCell>Preço (R$)</TableCell>
-                  <TableCell>Descrição</TableCell>
+                <TableRow>
+                  <TableCell sortDirection={orderBy === 'name' ? order : false}>
+                    <TableSortLabel
+                      active={orderBy === 'name'}
+                      direction={orderBy === 'name' ? order : 'asc'}
+                      onClick={() => handleRequestSort('name')}
+                    >
+                      Nome
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell sortDirection={orderBy === 'price' ? order : false}>
+                    <TableSortLabel
+                      active={orderBy === 'price'}
+                      direction={orderBy === 'price' ? order : 'asc'}
+                      onClick={() => handleRequestSort('price')}
+                    >
+                      Preço (R$)
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell sortDirection={orderBy === 'description' ? order : false}>
+                    <TableSortLabel
+                      active={orderBy === 'description'}
+                      direction={orderBy === 'description' ? order : 'asc'}
+                      onClick={() => handleRequestSort('description')}
+                    >
+                      Descrição
+                    </TableSortLabel>
+                  </TableCell>
                   <TableCell>Ações</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {filteredProducts.map((product) => (
-                  <TableRow key={product.id} >
+                  <TableRow key={product.id}>
                     <TableCell>{product.name}</TableCell>
-                    <TableCell>{(Number(product.price).toFixed(2))}</TableCell>
+                    <TableCell>{Number(product.price).toFixed(2)}</TableCell>
                     <TableCell style={{
                       maxWidth: '150px',
                       whiteSpace: 'nowrap',
