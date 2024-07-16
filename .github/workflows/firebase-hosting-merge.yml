@@ -11,9 +11,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: List files in web/src/pages/product
+        run: |
+          cd web/src/pages/product
+          ls -al
+
       - name: Install dependencies and build
         run: |
-          cd ./web
+          cd web
           npm ci
           npm run build
 
