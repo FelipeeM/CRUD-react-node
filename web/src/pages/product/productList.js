@@ -22,7 +22,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import ProductCreate from './ProductCreate';
+import ProductCreate from './productCreate';
 
 import ProductService from '../../services/product';
 
