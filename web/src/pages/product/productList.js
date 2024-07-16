@@ -22,8 +22,9 @@ import Grid from '@mui/material/Unstable_Grid2';
 import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import axios from 'axios';
 import ProductCreate from './ProductCreate';
+
+import ProductService from '../../services/product';
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -40,7 +41,7 @@ const ProductList = () => {
   const getProducts = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:3000/api/v1/product/findAll');
+      const response = await ProductService.findAll()
       setProducts(response.data);
       setLoading(false);
     } catch (error) {
@@ -58,7 +59,7 @@ const ProductList = () => {
   const handleDelete = async (id) => {
     setLoading(true);
     try {
-      await axios.delete(`http://localhost:3000/api/v1/product/${id}`);
+      await ProductService.delete(id)
       getProducts();
       setSnackbar({ open: true, message: 'Produto deletado com sucesso!', severity: 'success' });
     } catch (error) {

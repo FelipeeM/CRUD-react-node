@@ -11,12 +11,12 @@ import {
   DialogActions,
   CircularProgress,
 } from '@mui/material';
-import axios from 'axios';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import PriceInput from '../../components/form/PriceInput';
+import ProductService from '../../services/product';
 
 const productSchema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),
@@ -46,13 +46,13 @@ const ProductCreate = ({ onClose, onSave, product }) => {
     setLoading(true);
     try {
       if (product) {
-        await axios.put(`http://localhost:3000/api/v1/product`, {
+        await ProductService.update({
           id: product.id,
           ...data,
-        });
+        })
         setSnackbar({ open: true, message: 'Produto Atualizado!', severity: 'success' });
       } else {
-        await axios.post('http://localhost:3000/api/v1/product', data);
+        await ProductService.create(data)
         setSnackbar({ open: true, message: 'Produto Criado!', severity: 'success' });
       }
       onSave();
