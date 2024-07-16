@@ -20,8 +20,8 @@ jobs:
       - name: Deploy to Firebase
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
+          path: ./web
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CRUD_PRODUCT_REACT }}'
           channelId: live
           projectId: crud-product-react
-        working-directory: ./web
