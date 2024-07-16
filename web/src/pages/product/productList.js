@@ -14,8 +14,12 @@ import {
   Typography,
   IconButton,
   TableContainer,
-  CircularProgress
+  CircularProgress,
+  TextField,
+  InputAdornment
 } from '@mui/material';
+import Grid from '@mui/material/Unstable_Grid2';
+import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
@@ -27,6 +31,7 @@ const ProductList = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     getProducts();
@@ -73,16 +78,48 @@ const ProductList = () => {
     setSnackbar({ ...snackbar, open: false });
   };
 
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredProducts = products.filter(product =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    product.price.toString().toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <Container>
       <Typography variant="h4" component="h1" gutterBottom>
         Lista de Produtos
       </Typography>
-      <Button variant="contained" color="primary" onClick={() => setOpenForm(true)}>
-        Adicionar Produtos
-      </Button>
+      <Grid container spacing={2}>
+        <Grid xs={9}>
+          <TextField
+            fullWidth
+            variant="outlined"
+            placeholder="Pesquisar..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+        <Grid xs={3}>
+          <Button variant="contained" color="primary" onClick={() => setOpenForm(true)}>
+            Adicionar Produtos
+          </Button>
+
+        </Grid>
+      </Grid>
+
       {openForm && <ProductCreate onClose={handleFormClose} product={selectedProduct} onSave={getProducts} />}
-      <TableContainer component={Paper} style={{ marginTop: 20 }}>
+      <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
@@ -93,17 +130,16 @@ const ProductList = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {products.map((product) => (
+            {filteredProducts.map((product) => (
               <TableRow key={product.id}>
                 <TableCell>{product.name}</TableCell>
                 <TableCell>{product.price}</TableCell>
                 <TableCell style={{
-                  maxWidth: '50px',
+                  maxWidth: '150px',
                   whiteSpace: 'nowrap',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis'
                 }}>{product.description}</TableCell>
-
                 <TableCell>
                   <IconButton color="primary" onClick={() => handleEdit(product)}>
                     <EditIcon />
