@@ -15,12 +15,16 @@ jobs:
           cd web/src/pages/product
           ls -al
 
-      - name: Install dependencies and build
+      - name: Install dependencies
         run: |
           npm ci
+        working-directory: ./web
+
+      - name: Build project
+        run: |
           npm run build
         env:
-          REACT_APP_URL_API: ${{ vars.URL_API }}
+          REACT_APP_URL_API: ${{ secrets.REACT_APP_URL_API }}
         working-directory: ./web
 
       - name: Deploy to Firebase
