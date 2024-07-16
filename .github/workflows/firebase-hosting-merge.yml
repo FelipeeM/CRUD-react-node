@@ -29,3 +29,4 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CRUD_PRODUCT_REACT }}'
           channelId: live
           projectId: crud-product-react
+          entryPoint: ./web
