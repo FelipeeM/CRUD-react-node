@@ -26,7 +26,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ProductCreate from './productCreate';
 
 import ProductService from '../../services/product';
-import e from 'cors';
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
