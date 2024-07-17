@@ -111,7 +111,7 @@ const ProductList = () => {
 
   return (
     <Container>
-      {openForm && <ProductCreate onClose={handleFormClose} product={selectedProduct} onSave={getProducts} />}
+      {openForm && <ProductCreate onClose={handleFormClose} product={selectedProduct} onSave={getProducts} onSetSnackbar={setSnackbar} />}
       <Typography variant="h4" component="h1" gutterBottom>
         Lista de Produtos
       </Typography>
