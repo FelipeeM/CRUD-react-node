@@ -24,6 +24,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ProductCreate from './productCreate';
+import ConfirmDialog from '../../components/confirmDIalog/ConfirmDialog'; 
 
 import ProductService from '../../services/product';
 
@@ -36,6 +37,8 @@ const ProductList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState(null);
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [idToDelete, setIdToDelete] = useState(null);
 
   useEffect(() => {
     getProducts();
@@ -59,10 +62,15 @@ const ProductList = () => {
     setOpenForm(true);
   };
 
-  const handleDelete = async (id) => {
+  const runConfirmDialog = async (id) => {
+    console.log("runConfirmDialog",id)
+    setConfirmDialogOpen(!confirmDialogOpen)
+    setIdToDelete(id)
+  };
+  const handleDelete = async () => {
     setLoading(true);
     try {
-      await ProductService.delete(id);
+      await ProductService.delete(idToDelete);
       getProducts();
       setSnackbar({ open: true, message: 'Produto deletado com sucesso!', severity: 'success' });
     } catch (error) {
@@ -112,6 +120,13 @@ const ProductList = () => {
   return (
     <Container>
       {openForm && <ProductCreate onClose={handleFormClose} product={selectedProduct} onSave={getProducts} onSetSnackbar={setSnackbar} />}
+     {confirmDialogOpen && <ConfirmDialog
+        onAction={handleDelete} 
+        open={confirmDialogOpen} 
+        onOpen={setConfirmDialogOpen} 
+        title="Confirmar Acão"
+        message="Deseja deletar esse produto? Esta ação não pode ser desfeita."
+      />}
       <Typography variant="h4" component="h1" gutterBottom>
         Lista de Produtos
       </Typography>
@@ -187,7 +202,7 @@ const ProductList = () => {
                       <IconButton color="primary" onClick={() => handleEdit(product)}>
                         <EditIcon />
                       </IconButton>
-                      <IconButton color="secondary" onClick={() => handleDelete(product.id)}>
+                      <IconButton color="secondary" onClick={() => runConfirmDialog(product.id)}>
                         <DeleteIcon />
                       </IconButton>
                     </TableCell>
