@@ -21,3 +21,28 @@
 - **Objetivo:** Integrar a aplicação frontend com a API backend e realizar o deploy.
 
 ## Como Configurar e Rodar o Projeto Localmente ...
+
+Instruções Backend [aqui](https://github.com/FelipeeM/CRUD-react-node/blob/main/server/README.md).
+
+Instruções Frontend [aqui](https://github.com/FelipeeM/CRUD-react-node/blob/main/web/README.md).
+
+
+### Link para Ambiente de Produção: [aqui](https://crud-product-react.web.app/)
+
+
+### Tecnologias Utilizadas:
+
+- React
+- Node
+- Docker
+- MYSQL
+
+### Serviços Utilizadas:
+
+- Firebase Hosting
+- Cloud Run ( Google Cloud Platform )
+- VPS para o banco MYSQL
+
+### Deploy e Build:
+
+- Github Actions
