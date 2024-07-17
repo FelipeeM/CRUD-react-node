@@ -1,12 +1,18 @@
 const { Router } = require("express");
 const ProductController = require("../controllers/Product.controller");
 const { bodyRequiredField, bodyRequiredFieldNumber, paramRequiredField, expressValidatorMiddleware } = require('../utils/restFullApiHelpers')
+const { body } = require("express-validator")
+
+
 
 const productRouter = Router();
 const routeName = "/product"
 
 const productCreateValidations = [
     bodyRequiredField("name"),
+    body("description")
+        .exists()
+        .withMessage("Não pode ser indefinido"),
     bodyRequiredFieldNumber("price")
 ];
 const productUpdateValidations = [
@@ -26,7 +32,6 @@ const productDeleteValidations = [
  *       type: object
  *       required:
  *         - name
- *         - description
  *         - price
  *       properties:
  *         id:
@@ -42,8 +47,32 @@ const productDeleteValidations = [
  *           type: number
  *           format: float
  *           description: Preço do produto
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           description: Data de criação do produto
+ * 
+ *     ErrorResponse:
+ *       type: object
+ *       properties:
+ *         status:
+ *           type: string
+ *           example: fail
+ *         message:
+ *           type: string
+ *           example: 'Já existe um produto com esse nome!'
+ *         errors:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               message:
+ *                 type: string
+ *                 example: 'Produto não cadastrado!'
+ *               path:
+ *                 type: string
+ *                 example: 'name'
  */
-
 
 /**
  * @swagger
@@ -56,7 +85,21 @@ const productDeleteValidations = [
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Product'
+ *             type: object
+ *             required:
+ *               - name
+ *               - price
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: Nome do produto
+ *               description:
+ *                 type: string
+ *                 description: Descrição do produto
+ *               price:
+ *                 type: number
+ *                 format: float
+ *                 description: Preço do produto
  *     responses:
  *       200:
  *         description: Produto criado com sucesso
@@ -74,18 +117,36 @@ productRouter.post(
 /**
  * @swagger
  * /product:
- *   put:
- *     summary: Atualiza um produto existente
+ *   post:
+ *     summary: Cria um novo produto
  *     tags: [Products]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Product'
+ *             type: object
+ *             required:
+ *               - id
+ *               - name
+ *               - price
+ *             properties:
+ *               id:
+ *                 type: string
+ *                 description: ID do produto
+ *               name:
+ *                 type: string
+ *                 description: Nome do produto
+ *               description:
+ *                 type: string
+ *                 description: Descrição do produto
+ *               price:
+ *                 type: number
+ *                 format: float
+ *                 description: Preço do produto
  *     responses:
  *       200:
- *         description: Produto atualizado com sucesso
+ *         description: Produto criado com sucesso
  *         content:
  *           application/json:
  *             schema:
