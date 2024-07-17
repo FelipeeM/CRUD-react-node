@@ -28,7 +28,7 @@ const productSchema = z.object({
   price: z.number().min(0.01, 'Preço é obrigatório'),
 });
 
-const ProductCreate = ({ onClose, onSave, product }) => {
+const ProductCreate = ({ onClose, onSave, product,onSetSnackbar }) => {
   const { control, handleSubmit, reset, setValue, formState: { errors } } = useForm({
     resolver: zodResolver(productSchema),
   });
@@ -54,10 +54,10 @@ const ProductCreate = ({ onClose, onSave, product }) => {
           id: product.id,
           ...data,
         })
-        setSnackbar({ open: true, message: 'Produto Atualizado!', severity: 'success' });
+        onSetSnackbar({ open: true, message: 'Produto Atualizado!', severity: 'success' });
       } else {
         await ProductService.create(data)
-        setSnackbar({ open: true, message: 'Produto Criado!', severity: 'success' });
+        onSetSnackbar({ open: true, message: 'Produto Criado!', severity: 'success' });
       }
       onSave();
       onClose();
