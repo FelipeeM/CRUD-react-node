@@ -43,6 +43,6 @@ Instruções Frontend [aqui](https://github.com/FelipeeM/CRUD-react-node/blob/ma
 - Cloud Run ( Google Cloud Platform )
 - VPS para o banco MYSQL
 
-### Deploy e Build:
+### CI/CD:
 
 - Github Actions
