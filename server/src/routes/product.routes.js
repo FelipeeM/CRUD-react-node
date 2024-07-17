@@ -117,8 +117,8 @@ productRouter.post(
 /**
  * @swagger
  * /product:
- *   post:
- *     summary: Cria um novo produto
+ *   put:
+ *     summary: Atualiza um produto
  *     tags: [Products]
  *     requestBody:
  *       required: true
@@ -146,7 +146,7 @@ productRouter.post(
  *                 description: Preço do produto
  *     responses:
  *       200:
- *         description: Produto criado com sucesso
+ *         description: Produto atualizado com sucesso
  *         content:
  *           application/json:
  *             schema:
