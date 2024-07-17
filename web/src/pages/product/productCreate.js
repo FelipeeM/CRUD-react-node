@@ -20,7 +20,10 @@ import PriceInput from '../../components/form/PriceInput';
 import ProductService from '../../services/product';
 
 const productSchema = z.object({
-  name: z.string().min(1, 'Nome é obrigatório'),
+  name: z.string()
+    .min(1, 'Nome é obrigatório')
+    .refine(value => value.trim().length > 0, 'Nome Invalido')
+    .transform(value => value.trim()),
   description: z.string(),
   price: z.number().min(0.01, 'Preço é obrigatório'),
 });
@@ -131,7 +134,7 @@ const ProductCreate = ({ onClose, onSave, product }) => {
               <Button onClick={onClose} color="primary" disabled={loading}>
                 Cancelar
               </Button>
-              <LoadingButton  type="submit" color="primary" loading={loading}>
+              <LoadingButton type="submit" color="primary" loading={loading}>
                 Salvar
               </LoadingButton >
             </DialogActions>
