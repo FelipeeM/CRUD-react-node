@@ -50,7 +50,8 @@ const ProductList = () => {
     setLoading(true);
     try {
       const response = await ProductService.findAll();
-      setProducts(response.data);
+      const productsWithPriceFormated = response.data.map(product => ({...product, priceFormated: monetaryMask(Number(product.price).toFixed(2))}))
+      setProducts(productsWithPriceFormated);
     } catch (error) {
       console.error("Error fetching the products!", error);
       setSnackbar({ open: true, message: 'Erro ao buscar produtos!', severity: 'error' });
@@ -116,7 +117,8 @@ const ProductList = () => {
   const filteredProducts = sortedProducts.filter(product =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.price.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    product.price.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
+    product.priceFormated.toString().toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -193,7 +195,7 @@ const ProductList = () => {
                 {filteredProducts.map((product) => (
                   <TableRow key={product.id}>
                     <TableCell>{product.name}</TableCell>
-                    <TableCell>{monetaryMask(Number(product.price).toFixed(2))}</TableCell>
+                    <TableCell>{product.priceFormated}</TableCell>
                     <TableCell style={{
                       maxWidth: '150px',
                       whiteSpace: 'nowrap',
