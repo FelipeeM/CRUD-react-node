@@ -19,6 +19,9 @@
 
 ### Integração e Deploy
 - **Objetivo:** Integrar a aplicação frontend com a API backend e realizar o deploy.
+- **Extra:** 
+  - CI/CD com git actions [aqui](https://github.com/FelipeeM/CRUD-react-node/actions).
+  - Google Cloud Platform 
 
 ## Como Configurar e Rodar o Projeto Localmente ...
 
@@ -37,7 +40,7 @@ Instruções Frontend [aqui](https://github.com/FelipeeM/CRUD-react-node/blob/ma
 - Docker
 - MYSQL
 
-### Serviços Utilizadas:
+### Serviços Utilizados:
 
 - Firebase Hosting
 - Cloud Run ( Google Cloud Platform )

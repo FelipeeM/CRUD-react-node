@@ -1,15 +1,12 @@
 ## Installation
 
-Usar o [npm] como gerenciador de pacotes.
+Usar o **npm** como gerenciador de pacotes.
 
-### Criar .ENV server
-- Adicionar variaveis:
-  - DATABASE_URL 
-    - exemplo: mysql://user:password@IP:PORT/db_name
-    - O prisma utiliza essa URL para se conectar ao banco de dados.
-  - SERVER_URL:
-    - exemplo: http://localhost:3333/
-    - URL mostrada na documentação do swagger
+### Configurar .ENV server
+- O arquivo .env do server está com o nome **.env.sample**, basta editar para **.env**
+
+### Configurar .ENV root
+- O arquivo .env do root ( pasta principal do projeto ) está com o nome **.env.sample**, basta editar para **.env**
 
 ### Iniciar MYSQL Docker container
 ```bash
@@ -19,10 +16,14 @@ cd ..
 # Execute Docker Compose
 docker-compose up
 ```
-### Criar tabelas
+
+### Rodar Server
 ```bash
 # Go to server directory
 cd server
+
+# Install dependencies
+npm i
 
 # Generate Prisma Client
 npx prisma generate
@@ -32,15 +33,6 @@ npx prisma db push
 
 # Populate DB Table
 npm run seed
-```
-
-### Rodar Server
-```bash
-# Go to server directory
-cd server
-
-# Install dependencies
-npm i
 
 # For dev enviroment
 npm start
