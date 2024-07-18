@@ -24,9 +24,11 @@ import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ProductCreate from './productCreate';
-import ConfirmDialog from '../../components/confirmDIalog/ConfirmDialog'; 
+import ConfirmDialog from '../../components/confirmDIalog/ConfirmDialog';
 
 import ProductService from '../../services/product';
+
+import { monetaryMask } from "../../utils/masks"
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -63,7 +65,7 @@ const ProductList = () => {
   };
 
   const runConfirmDialog = async (id) => {
-    console.log("runConfirmDialog",id)
+    console.log("runConfirmDialog", id)
     setConfirmDialogOpen(!confirmDialogOpen)
     setIdToDelete(id)
   };
@@ -120,10 +122,10 @@ const ProductList = () => {
   return (
     <Container>
       {openForm && <ProductCreate onClose={handleFormClose} product={selectedProduct} onSave={getProducts} onSetSnackbar={setSnackbar} />}
-     {confirmDialogOpen && <ConfirmDialog
-        onAction={handleDelete} 
-        open={confirmDialogOpen} 
-        onOpen={setConfirmDialogOpen} 
+      {confirmDialogOpen && <ConfirmDialog
+        onAction={handleDelete}
+        open={confirmDialogOpen}
+        onOpen={setConfirmDialogOpen}
         title="Confirmar Acão"
         message="Deseja deletar esse produto? Esta ação não pode ser desfeita."
       />}
@@ -191,7 +193,7 @@ const ProductList = () => {
                 {filteredProducts.map((product) => (
                   <TableRow key={product.id}>
                     <TableCell>{product.name}</TableCell>
-                    <TableCell>{Number(product.price).toFixed(2)}</TableCell>
+                    <TableCell>{monetaryMask(Number(product.price).toFixed(2))}</TableCell>
                     <TableCell style={{
                       maxWidth: '150px',
                       whiteSpace: 'nowrap',
