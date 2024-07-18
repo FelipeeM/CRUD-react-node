@@ -114,8 +114,10 @@ const ProductList = () => {
     }
   });
 
+  const formatValue = (value) => value.toString().toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '').replaceAll(' ','');
+
   const filteredProducts = sortedProducts.filter(product =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    formatValue(product.name).toLowerCase().includes(formatValue(searchTerm)) ||
     product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
     product.price.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
     product.priceFormated.toString().toLowerCase().includes(searchTerm.toLowerCase())
