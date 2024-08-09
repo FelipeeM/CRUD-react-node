@@ -66,7 +66,6 @@ const ProductList = () => {
   };
 
   const runConfirmDialog = async (id) => {
-    console.log("runConfirmDialog", id)
     setConfirmDialogOpen(!confirmDialogOpen)
     setIdToDelete(id)
   };
