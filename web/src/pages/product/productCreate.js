@@ -28,7 +28,7 @@ const productSchema = z.object({
   price: z.number().min(0.01, 'Preço é obrigatório'),
 });
 
-const ProductCreate = ({ onClose, onSave, product,onSetSnackbar }) => {
+const ProductCreate = ({ onClose, onSave, product, onSetSnackbar }) => {
   const { control, handleSubmit, reset, setValue, formState: { errors } } = useForm({
     resolver: zodResolver(productSchema),
   });
@@ -135,7 +135,7 @@ const ProductCreate = ({ onClose, onSave, product,onSetSnackbar }) => {
                 Cancelar
               </Button>
               <LoadingButton type="submit" color="primary" loading={loading}>
-                Salvar
+                <span>Salvar</span>
               </LoadingButton >
             </DialogActions>
           </form>

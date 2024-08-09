@@ -1,4 +1,4 @@
-import React, {  useState } from 'react';
+import React, { useState } from 'react';
 import {
     Dialog,
     DialogActions,
@@ -41,7 +41,7 @@ const ConfirmDialog = ({ open, onOpen, title, message, onAction }) => {
                     Não
                 </Button>
                 <LoadingButton onClick={runAction} color="primary" autoFocus loading={loadingSave}>
-                    Sim
+                    <span>Sim</span>
                 </LoadingButton>
             </DialogActions>
         </StyledDialog>
